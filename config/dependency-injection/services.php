@@ -47,6 +47,7 @@ $yoast_seo_excluded_directories = [
 	'presenters',
 	'exceptions',
 	'values/semrush',
+	'values/replace-vars',
 	'surfaces/values',
 	'wordpress',
 ];
