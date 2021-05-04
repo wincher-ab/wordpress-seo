@@ -40,6 +40,11 @@ const ANNOTATION_ATTRIBUTES = {
 			key: "content",
 		},
 	],
+	"yoast/job-description": [
+		{
+			key: "description",
+		},
+	],
 };
 
 const ASSESSMENT_SPECIFIC_ANNOTATION_ATTRIBUTES = {
@@ -356,6 +361,16 @@ function fillAnnotationQueue( annotations ) {
 	} ) );
 }
 
+function getAllBlocks( rootBlocks ) {
+	let blocks = [];
+
+	rootBlocks.forEach( block => {
+		blocks.push( block, ...getAllBlocks( block.innerBlocks) );
+	} );
+
+	return blocks;
+}
+
 /**
  * Applies the given marks as annotations in the block editor.
  *
@@ -372,7 +387,8 @@ export function applyAsAnnotations( paper, marks ) {
 		return;
 	}
 
-	const blocks = select( "core/editor" ).getBlocks();
+	const rootBlocks = select( "core/editor" ).getBlocks();
+	const blocks = getAllBlocks( rootBlocks );
 
 	// For every block...
 	const annotations = flatMap( blocks, ( ( block ) => {
@@ -382,6 +398,8 @@ export function applyAsAnnotations( paper, marks ) {
 			( ( attribute ) => getAnnotationsForBlockAttribute( attribute, block, marks ) )
 		);
 	} ) );
+
+	console.log( annotations );
 
 	fillAnnotationQueue( annotations );
 
